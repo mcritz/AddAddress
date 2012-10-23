@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Comp for Add Address</title>
+
+
+        <link rel="stylesheet" href="css/common.css">
+        <link rel="stylesheet" href="css/chosen.css">
+        <style>
+            .block {
+                display: block !important;
+            }
+            
+            #add_address {
+                font-family: "Helvetica Neue", Trebuchet, Arial, sans;
+                display: block;
+                width: 420px;
+                margin: 10px;
+            }
+            #add_address fieldset {
+                border: 0;
+                padding: 0;
+                margin: 0;
+                clear: both;
+            }
+            #add_address label {
+                font-weight: 700;
+                display: block;
+                width: 105px;
+                float: left;
+                text-align: right;
+                padding: 15px 5px 0 0;
+                clear: left;
+            }
+            .address_customization {
+                background: #f4f4f4;
+                border-radius: 4px 4px 0 0;
+            }
+            #add_address .address_customization label {
+                display: inline;
+                width: auto;
+                margin: 5px 10px;
+                padding: 0;
+                clear: both;
+                text-align: left;
+                text-shadow:0 1px 0 #fafafa;
+            }
+            #custom_name {
+                width: 390px;
+                margin: 0 10px 5px 10px;
+                clear: both;
+
+            }
+            #add_address input:focus {
+                background: #fefeff;
+                border: 1px solid #9cf !important;
+                box-shadow: 0 0 20px #def inset;
+            }
+            .single_line {
+                text-align: left;
+                clear:left;
+                padding:10px 0 0 110px;
+            }
+            #add_address .single_line input,
+            #add_address .single_line label {
+                text-align: left !important;
+                display: inline;
+                width: auto !important;
+                float: none;
+                padding: 0;
+                margin: 0 1em 0 0 !important;
+                clear: none;
+            }
+            .chzn-container *{
+                box-sizing:content-box;
+            }
+            .chzn-container a:hover {
+                text-decoration: none;
+            }
+            .chzn-select {
+                width: 300px;
+            }
+            .chzn-container-single,
+            .input-grid-2,
+            .input-grid-4 {
+                margin: 10px 0;
+            }
+            /* .chzn-container-active .chzn-single,
+            .chzn-container-active .chzn-drop
+            {
+                border-left: 1px solid #9cf !important;
+                border-right: 1px solid #9cf !important;
+            }
+            .chzn-container-active .chzn-single {
+                border-top: 1px solid #9cf !important;
+            }
+            .chzn-container-active .chzn-drop {
+                border-bottom: 1px solid #9cf !important;
+            } */ 
+            #add_address input {
+                background: -webkit-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
+                background: -moz-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
+                background: -o-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
+                background: linear-gradient(#eeeeee 1%, #ffffff 15%);
+
+                padding: 5px;
+                border: 1px solid #aaa;
+                outline: none;
+            }
+            .input-grid-2,
+            .input-grid-4 {
+                display: block;
+                float: left;
+            }
+            .input-grid-2 {
+                width: 150px;
+            }
+            .input-grid-4 {
+                width: 290px;
+            }
+        </style>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+        <![endif]-->
+
+        <!-- Begin Form -->
+        <form id="add_address">
+            <fieldset class="address_customization clear_fix">
+                <label for="custom_name">Your Custom Name for this Location</label><br/>
+                <input id="custom_name" />
+            </fieldset>
+            <!-- Only display country select for SCE Regions that have more than one country -->
+            <label for="country" >Country <span class="form-warning">*</span></label>
+            <select id="country" class="chzn-select" data-placeholder="Choose a Country…">
+                <option></option><!-- the top option is null value. Let Choosen use data-placeholder -->
+                <option>American Samoa</option>
+                <option>Argentina</option>
+                <option>Brazil</option>
+                <option>Canada</option>
+                <option>Chile</option>
+                <option>Guam</option>
+                <option>Jamaica</option>
+                <option>Japan</option>
+                <option>Mexico</option>
+                <option>Northern Mariana Islands</option>
+                <option>Puerto Rico</option>
+                <option>United States</option>
+                <option>United States Minor Outlying Islands</option>
+                <option>Virgin Islands, U.S.</option>
+            </select>
+
+            <div class="widget_address"></div>
+
+            <a href="#new_address" id="new_address">New Address</a>
+        </form>
+        <!-- /Form -->
+
+        <!-- jquery is already defined in DEVNet, this is for mockups only -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+        <!-- we'll need to add this to the javascript browser resource type list -->
+        <script src="js/chosen.jquery.min.js"></script>
+        <script>
+            j = jQuery.noConflict();
+            // apply Chosen jQuery plugin to form elements
+            j('.chzn-select').chosen(); //{allow_single_deselect:true}
+            j('#country').change(function(){
+                var duration = 250;
+                j('.current').removeClass('current');
+                j(".new_address_form").hide();
+                switch(j('#country').val()){
+                    case "" :
+                        // User deselected country. Clear form.
+                        break;
+                    case "Canada" :
+                        j(".address_ca").fadeIn(duration).addClass("current");
+                        break;
+                    case "Japan" :
+                        j(".address_jp").fadeIn(duration).addClass("current");
+                        break;
+                    case "United States" :
+                        j(".address_us").fadeIn(duration).addClass("current");
+                        break;
+                    default:
+                        j(".address_generic").fadeIn(duration).addClass("current");
+                        break;
+                }
+            });
+            j('#new_address').click(function(){
+                new_form = j('.current').clone();
+                j('.current').after(new_form);
+            });
+            /* j('input[id*="postal"]').blur(function(){
+                $.getJSON("http://www.geonames.org/postalCodeLookupJSON?&country=US&callback=?", {postalcode: this.value }, function(response) {
+                    if (response && response.postalcodes.length && response.postalcodes[0].placeName) {
+                        console.log('response: ' + response.postalcodes[0].placeName);
+                    }
+                });
+            });*/
+        </script>
+    </body>
+</html>

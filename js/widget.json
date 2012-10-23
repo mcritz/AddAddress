@@ -1,0 +1,21 @@
+{
+	country:'US',
+	fieldOrder:'Western',
+	fields:
+	{
+		{street:'text'},
+		{city:'text'},
+		{state:
+			{
+				{stateLabel:'State'},
+				{name:'Alabama', oid:'1'},{name:'Alaska', oid:'2'},{name:'Arizona', oid:'3'},{name:'Arkansas', oid:'4'},{name:'California', oid:'5'},{name:'Colorado', oid:'6'},{name:'Connecticut', oid:'7'},{name:'Delaware', oid:'8'},{name:'Florida', oid:'9'},{name:'Georgia', oid:'10'},{name:'Hawaii', oid:'11'},{name:'Idaho', oid:'12'},{name:'Illinois', oid:'13'},{name:'Indiana', oid:'14'},{name:'Iowa', oid:'15'},{name:'Kansas', oid:'16'},{name:'Kentucky', oid:'17'},{name:'Louisiana', oid:'18'},{name:'Maine', oid:'19'},{name:'Maryland', oid:'20'},{name:'Massachusetts', oid:'21'},{name:'Michigan', oid:'22'},{name:'Minnesota', oid:'23'},{name:'Mississippi', oid:'24'},{name:'Missouri', oid:'25'},{name:'Montana', oid:'26'},{name:'Nebraska', oid:'27'},{name:'Nevada', oid:'28'},{name:'New Hampshire', oid:'29'},{name:'New Jersey', oid:'30'},{name:'New Mexico', oid:'31'},{name:'New York', oid:'32'},{name:'North Carolina', oid:'33'},{name:'North Dakota', oid:'34'},{name:'Ohio', oid:'35'},{name:'Oklahoma', oid:'36'},{name:'Oregon', oid:'37'},{name:'Pennsylvania', oid:'38'},{name:'Rhode Island', oid:'39'},{name:'South Carolina', oid:'40'},{name:'South Dakota', oid:'41'},{name:'Tennessee', oid:'42'},{name:'Texas', oid:'43'},{name:'Utah', oid:'44'},{name:'Vermont', oid:'45'},{name:'Virginia', oid:'46'},{name:'Washington', oid:'47'},{name:'West Virginia', oid:'48'},{name:'Wisconsin', oid:'49'},{name:'Wyoming', oid:'50'}
+			}
+		},
+		{postal:
+			{
+				{type:'text'},
+				{postalLabel:'Zip Code'}
+			}
+		}
+	}
+}

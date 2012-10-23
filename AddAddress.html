@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Comp for Add Address</title>
+
+
+        <link rel="stylesheet" href="css/common.css">
+        <link rel="stylesheet" href="css/chosen.css">
+        <style>
+            .block {
+                display: block !important;
+            }
+            
+            #add_address {
+                font-family: "Helvetica Neue", Trebuchet, Arial, sans;
+                display: block;
+                width: 420px;
+                margin: 10px;
+            }
+            #add_address fieldset {
+                border: 0;
+                padding: 0;
+                margin: 0;
+                clear: both;
+            }
+            #add_address label {
+                font-weight: 700;
+                display: block;
+                width: 105px;
+                float: left;
+                text-align: right;
+                padding: 15px 5px 0 0;
+                clear: left;
+            }
+            .address_customization {
+                background: #f4f4f4;
+                border-radius: 4px 4px 0 0;
+            }
+            #add_address .address_customization label {
+                display: inline;
+                width: auto;
+                margin: 5px 10px;
+                padding: 0;
+                clear: both;
+                text-align: left;
+                text-shadow:0 1px 0 #fafafa;
+            }
+            #custom_name {
+                width: 390px;
+                margin: 0 10px 5px 10px;
+                clear: both;
+
+            }
+            #add_address input:focus {
+                background: #fefeff;
+                border: 1px solid #9cf !important;
+                box-shadow: 0 0 20px #def inset;
+            }
+            .single_line {
+                text-align: left;
+                clear:left;
+                padding:10px 0 0 110px;
+            }
+            #add_address .single_line input,
+            #add_address .single_line label {
+                text-align: left !important;
+                display: inline;
+                width: auto !important;
+                float: none;
+                padding: 0;
+                margin: 0 1em 0 0 !important;
+                clear: none;
+            }
+            .chzn-container *{
+                box-sizing:content-box;
+            }
+            .chzn-container a:hover {
+                text-decoration: none;
+            }
+            .chzn-select {
+                width: 300px;
+            }
+            .chzn-container-single,
+            .input-grid-2,
+            .input-grid-4 {
+                margin: 10px 0;
+            }
+            /* .chzn-container-active .chzn-single,
+            .chzn-container-active .chzn-drop
+            {
+                border-left: 1px solid #9cf !important;
+                border-right: 1px solid #9cf !important;
+            }
+            .chzn-container-active .chzn-single {
+                border-top: 1px solid #9cf !important;
+            }
+            .chzn-container-active .chzn-drop {
+                border-bottom: 1px solid #9cf !important;
+            } */ 
+            #add_address input {
+                background: -webkit-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
+                background: -moz-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
+                background: -o-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
+                background: linear-gradient(#eeeeee 1%, #ffffff 15%);
+
+                padding: 5px;
+                border: 1px solid #aaa;
+                outline: none;
+            }
+            .input-grid-2,
+            .input-grid-4 {
+                display: block;
+                float: left;
+            }
+            .input-grid-2 {
+                width: 150px;
+            }
+            .input-grid-4 {
+                width: 290px;
+            }
+        </style>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+        <![endif]-->
+
+        <!-- Begin Form -->
+        <form id="add_address">
+            <fieldset class="address_customization clear_fix">
+                <label for="custom_name">Your Custom Name for this Location</label><br/>
+                <input id="custom_name" />
+            </fieldset>
+            <!-- Only display country select for SCE Regions that have more than one country -->
+            <label for="country" >Country <span class="form-warning">*</span></label>
+            <select id="country" class="chzn-select" data-placeholder="Choose a Country…">
+                <option></option><!-- the top option is null value. Let Choosen use data-placeholder -->
+                <option>American Samoa</option>
+                <option>Argentina</option>
+                <option>Brazil</option>
+                <option>Canada</option>
+                <option>Chile</option>
+                <option>Guam</option>
+                <option>Jamaica</option>
+                <option>Japan</option>
+                <option>Mexico</option>
+                <option>Northern Mariana Islands</option>
+                <option>Puerto Rico</option>
+                <option>United States</option>
+                <option>United States Minor Outlying Islands</option>
+                <option>Virgin Islands, U.S.</option>
+            </select>
+
+            <fieldset class="new_address_form address_ca hidden">
+                <label for="address1">Street <span class="form-warning">*</span></label>
+                <input id="address1" class="input-grid-4"/>
+                <label for="town">City <span class="form-warning">*</span></label>
+                <input id="town" class="input-grid-4"/>
+                <label for="provience_ca">Provience <span class="form-warning">*</span></label>
+                <select id="provience_ca" class="chzn-select" data-placeholder="Choose a Provience…">
+                    <option></option>
+                    <option>AB</option>
+                    <option>BC</option>
+                    <option>AB</option>
+                    <option>BC</option>
+                    <option>MB</option>
+                    <option>NB</option>
+                    <option>NL</option>
+                    <option>NT</option>
+                    <option>NS</option>
+                    <option>NU</option>
+                    <option>ON</option>
+                    <option>PE</option>
+                    <option>QC</option>
+                    <option>SK</option>
+                    <option>YT</option>
+                </select>
+                <label for="postalCode_ca">Postal Code <span class="form-warning">*</span></label>
+                <input id="postalCode_ca" class="input-grid-2" placeholder="123 123"/>
+                <div class="single_line">
+                    <input id="save_address_ca" class="float_left" type="checkbox" checked="checked" />
+                    <label for="save_address_ca" class="float_left">Save and share this address with my organization</label>
+                </div>
+            </fieldset>
+
+            <fieldset class="new_address_form address_jp hidden">
+                <label for="postalCode">Postal Code <span class="form-warning">*</span></label>
+                <input id="postalCode" class="input-grid-2" placeholder="1234-1234"/>
+                <label for="prefecture">Prefecture <span class="form-warning">*</span></label>
+                <select id="prefecture" class="chzn-select" data-placeholder="Choose a Prefecture…">
+                    <option></option>
+                    <optgroup label="Hokkaidō">
+                        <option>Hokkaidō</option>
+                    </optgroup>
+                    <optgroup label="Tōhoku">
+                        <option>Aomori</option>
+                        <option>Iwate</option>
+                        <option>Miyagi</option>
+                        <option>Akita</option>
+                        <option>Yamagata</option>
+                        <option>Fukushima</option>
+                    </optgroup>
+                    <optgroup label="Kantō">
+                        <option>Ibaraki</option>
+                        <option>Tochigi</option>
+                        <option>Gunma</option>
+                        <option>Saitama</option>
+                        <option>Chiba</option>
+                        <option>Tōkyō</option>
+                        <option>Kanagawa</option>
+                    </optgroup>
+                    <optgroup label="Chūbu">
+                        <option>Niigata</option>
+                        <option>Toyama</option>
+                        <option>Ishikawa</option>
+                        <option>Fukui</option>
+                        <option>Yamanashi</option>
+                        <option>Nagano</option>
+                        <option>Gifu</option>
+                        <option>Shizuoka</option>
+                        <option>Aichi</option>
+                    </optgroup>
+                    <optgroup label="Kansai">
+                        <option>Mie</option>
+                        <option>Shiga</option>
+                        <option>Kyōto</option>
+                        <option>Ōsaka</option>
+                        <option>Hyōgo</option>
+                        <option>Nara</option>
+                        <option>Wakayama</option>
+                    </optgroup>
+                    <optgroup label="Chūgoku">
+                        <option>Tottori</option>
+                        <option>Shimane</option>
+                        <option>Okayama</option>
+                        <option>Hiroshima</option>
+                        <option>Yamaguchi</option>
+                    </optgroup>
+                    <optgroup label="Shikoku">
+                        <option>Tokushima</option>
+                        <option>Kagawa</option>
+                        <option>Ehime</option>
+                        <option>Kōchi</option>
+                    </optgroup>
+                    <optgroup label="Kyūshū">
+                        <option>Fukuoka</option>
+                        <option>Saga</option>
+                        <option>Nagasaki</option>
+                        <option>Kumamoto</option>
+                        <option>Ōita</option>
+                        <option>Miyazaki</option>
+                        <option>Kagoshima</option>
+                    </optgroup>
+                    <optgroup label="Okinawa">
+                        <option>Okinawa</option>
+                    </optgroup>
+                </select>
+                <label for="town">City <span class="form-warning">*</span></label>
+                <input id="town" class="input-grid-4"/>
+                <label for="address1">Street <span class="form-warning">*</span></label>
+                <input id="address1" class="input-grid-4"/>
+                <div class="single_line">
+                    <input id="save_address_jp" class="float_left" type="checkbox" checked="checked" />
+                    <label for="save_address_jp" class="float_left">Save and share this address with my organization</label>
+                </div>
+            </fieldset>
+
+            <fieldset class="new_address_form address_us hidden">
+                <label for="address1">Street <span class="form-warning">*</span></label>
+                <input id="address1" class="input-grid-4"/>
+                <label for="city">City <span class="form-warning">*</span></label>
+                <input id="city" class="input-grid-4"/>
+                <label for="state">State <span class="form-warning">*</span></label>
+                <select id="state" class="chzn-select" data-placeholder="Choose a State…">
+                    <option></option>
+                    <option>AL</option>
+                    <option>AK</option>
+                    <option>AZ</option>
+                    <option>AR</option>
+                    <option>CA</option>
+                    <option>CO</option>
+                    <option>CT</option>
+                    <option>DE</option>
+                    <option>DC</option>
+                    <option>FL</option>
+                    <option>GA</option>
+                    <option>HI</option>
+                    <option>ID</option>
+                    <option>IL</option>
+                    <option>IN</option>
+                    <option>IA</option>
+                    <option>KS</option>
+                    <option>KY</option>
+                    <option>LA</option>
+                    <option>ME</option>
+                    <option>MD</option>
+                    <option>MA</option>
+                    <option>MI</option>
+                    <option>MN</option>
+                    <option>MS</option>
+                    <option>MO</option>
+                    <option>MT</option>
+                    <option>NE</option>
+                    <option>NV</option>
+                    <option>NH</option>
+                    <option>NJ</option>
+                    <option>NM</option>
+                    <option>NY</option>
+                    <option>NC</option>
+                    <option>ND</option>
+                    <option>OH</option>
+                    <option>OK</option>
+                    <option>OR</option>
+                    <option>PA</option>
+                    <option>RI</option>
+                    <option>SC</option>
+                    <option>SD</option>
+                    <option>TN</option>
+                    <option>TX</option>
+                    <option>UT</option>
+                    <option>VT</option>
+                    <option>VA</option>
+                    <option>WA</option>
+                    <option>WV</option>
+                    <option>WI</option>
+                    <option>WY</option>
+                </select>
+                <label for="postal_us">Zip Code <span class="form-warning">*</span></label>
+                <input id="postal_us" class="input-grid-2" placeholder="12345"/>
+                <div class="single_line">
+                    <input id="save_address_us" class="float_left" type="checkbox" checked="checked" />
+                    <label for="save_address_us" class="float_left">Save and share this address with my organization</label>
+                </div>
+            </fieldset>
+
+            <fieldset class="new_address_form address_generic hidden">
+                <label for="address1_generic">Street <span class="form-warning">*</span></label>
+                <input id="address1_generic" class="input-grid-4"/>
+                <label for="city_generic">City <span class="form-warning">*</span></label>
+                <input id="city_generic" class="input-grid-4"/>
+                <label for="territory_generic">Territory</label>
+                <input id="territory_generic" class="input-grid-2" placeholder="">
+                <label for="postal_generic">Postal Code <span class="form-warning">*</span></label>
+                <input id="postal_generic" class="input-grid-2" />
+                <div class="single_line">
+                    <input id="save_address_generic" class="float_left" type="checkbox" checked="checked" />
+                    <label for="save_address_generic" class="float_left">Save and share this address with my organization</label>
+                </div>
+            </fieldset>
+        </form>
+        <!-- /Form -->
+
+        <!-- jquery is already defined in DEVNet, this is for mockups only -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+        <!-- we'll need to add this to the javascript browser resource type list -->
+        <script src="js/chosen.jquery.min.js"></script>
+        <script>
+            j = jQuery.noConflict();
+            // apply Chosen jQuery plugin to form elements
+            j('.chzn-select').chosen(); //{allow_single_deselect:true}
+            j('#country').change(function(){
+                var duration = 250;
+                j(".new_address_form").hide();
+                switch(j('#country').val()){
+                    case "" :
+                        // User deselected country. Clear form.
+                        break;
+                    case "Canada" :
+                        j(".address_ca").fadeIn(duration);
+                        break;
+                    case "Japan" :
+                        j(".address_jp").fadeIn(duration);
+                        break;
+                    case "United States" :
+                        j(".address_us").fadeIn(duration);
+                        break;
+                    default:
+                        j(".address_generic").fadeIn(duration);
+                        break;
+                }
+            });
+            /* j('input[id*="postal"]').blur(function(){
+                $.getJSON("http://www.geonames.org/postalCodeLookupJSON?&country=US&callback=?", {postalcode: this.value }, function(response) {
+                    if (response && response.postalcodes.length && response.postalcodes[0].placeName) {
+                        console.log('response: ' + response.postalcodes[0].placeName);
+                    }
+                });
+            });*/
+        </script>
+    </body>
+</html>
