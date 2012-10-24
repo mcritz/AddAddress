@@ -158,45 +158,79 @@
 
             <div class="widget_address"></div>
 
-            <a href="#new_address" id="new_address">New Address</a>
+            <!-- <a href="#new_address" id="new_address">New Address</a> -->
         </form>
-        <!-- /Form -->
 
         <!-- jquery is already defined in DEVNet, this is for mockups only -->
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
-        <!-- we'll need to add this to the javascript browser resource type list -->
-        <script src="js/chosen.jquery.min.js"></script>
+        <script src="js/chosen.jquery.min.js"></script><!-- XXTODOXX: add chosen to the javascript browser resource type -->
+
         <script>
             j = jQuery.noConflict();
+
             // apply Chosen jQuery plugin to form elements
-            j('.chzn-select').chosen(); //{allow_single_deselect:true}
+            var applyChosen = function(){
+                j('.chzn-select').chosen();
+            }
+
+            var jsonFormData = {};
+            var addressData = {};
+            var stateLabel = "";
+            var states = [];
+            var getFormData = function(url){
+                j.getJSON(url,
+                    function(data){
+                        jsonFormData = data;
+                        updateAddressForm(jsonFormData);
+                    }
+                )
+            }
+            var updateAddressForm = function(formData){
+                addressData = j(formData)[0].country;
+                for (i = 0; i < addressData.length; i++) {
+                    states = [];
+                    labelValue  = addressData[i].name;
+                    stateLabel  = addressData[i].fields.state.label;
+                    for (s = 0; s < addressData[i].fields.state.members.length; s++ ){
+                        states.push(addressData[i].fields.state.members[s].name);
+                    }
+                    console.log('states: ' + states);
+                    j('.widget_address').append('<fieldset name="' + labelValue + '"><legend>' + labelValue + '</legend><label for="' + stateLabel + '">' + stateLabel + '</label><select id="' + stateLabel + '"></select></fieldset>');
+                }
+            }
+
             j('#country').change(function(){
                 var duration = 250;
                 j('.current').removeClass('current');
-                j(".new_address_form").hide();
+                j('.new_address_form').hide();
                 switch(j('#country').val()){
                     case "" :
                         // User deselected country. Clear form.
                         break;
                     case "Canada" :
-                        j(".address_ca").fadeIn(duration).addClass("current");
                         break;
                     case "Japan" :
-                        j(".address_jp").fadeIn(duration).addClass("current");
                         break;
                     case "United States" :
-                        j(".address_us").fadeIn(duration).addClass("current");
                         break;
                     default:
-                        j(".address_generic").fadeIn(duration).addClass("current");
                         break;
                 }
             });
+
             j('#new_address').click(function(){
                 new_form = j('.current').clone();
                 j('.current').after(new_form);
             });
-            /* j('input[id*="postal"]').blur(function(){
+
+            j(document).ready(function(){
+                getFormData('js/widget.json');
+                applyChosen();
+            });
+
+            /* insecure. Maybe some other implementation.
+
+            j('input[id*="postal"]').blur(function(){
                 $.getJSON("http://www.geonames.org/postalCodeLookupJSON?&country=US&callback=?", {postalcode: this.value }, function(response) {
                     if (response && response.postalcodes.length && response.postalcodes[0].placeName) {
                         console.log('response: ' + response.postalcodes[0].placeName);
