@@ -201,15 +201,18 @@
                         thisState = addressData[i].fields.state.members[s].name;
                         states = states + '<option value="' + thisState + '">' + thisState + '</option>';
                     }
-                    console.log('states: ' + states);
-                    j('.widget_address').append('<fieldset name="' + labelValue + '"><legend>' + labelValue + '</legend><label for="' + stateLabel + '">' + stateLabel + '</label><select id="' + stateLabel + ' class="chzn-select">' + states + '</select></fieldset>');
+                    j('.widget_address').append(
+                        '<fieldset name="' + labelValue + '"><legend>' + labelValue + '</legend><label for="street_' + labelValue + '">' + addressData[i].fields.street + '</label><input id="street_' + labelValue + '" placeholder="' + addressData[i].fields.street + '"><br/><label for="city_' + labelValue + '">' + addressData[i].fields.city + '</label><input id="city_' + labelValue + '" placeholder="' + addressData[i].fields.city + '"><label for="' + stateLabel + '">' + stateLabel + '</label><select id="' + stateLabel + '" class="chzn-select">' + states + '</select><label for="postal_' + labelValue + '">' + addressData[i].fields.postal + '</label><input id="postal_' + labelValue + '" placeholder="' + addressData[i].fields.postal + '"></fieldset>');
                 }
+                applyChosen();
             }
 
             j('#country').change(function(){
                 var duration = 250;
                 j('.current').removeClass('current');
                 j('.new_address_form').hide();
+                j('.widget_address').html();
+                getFormData('js/widget.json');
                 switch(j('#country').val()){
                     case "" :
                         // User deselected country. Clear form.
@@ -223,7 +226,6 @@
                     default:
                         break;
                 }
-                applyChosen();
             });
 
             j('#new_address').click(function(){
@@ -232,8 +234,8 @@
             });
 
             j(document).ready(function(){
-                getFormData('js/widget.json');
-                applyChosen();
+                j('.chzn-select').chosen();
+                // getFormData('js/widget.json');
             });
 
             /* insecure. Maybe some other implementation.
