@@ -21,12 +21,18 @@
                 display: block;
                 width: 420px;
                 margin: 10px;
+                color: #444;
             }
             #add_address fieldset {
                 border: 0;
                 padding: 0;
                 margin: 0;
                 clear: both;
+                background: #f4f4f4;
+                border-radius: 4px;
+            }
+            #add_address fieldset legend {
+                margin: 1em;;
             }
             #add_address label {
                 font-weight: 700;
@@ -34,7 +40,7 @@
                 width: 105px;
                 float: left;
                 text-align: right;
-                padding: 15px 5px 0 0;
+                padding: .75em 5px 0 0;
                 clear: left;
             }
             .address_customization {
@@ -148,6 +154,8 @@
                 <option>Guam</option>
                 <option>Jamaica</option>
                 <option>Japan</option>
+                <option>Korea</option>
+                <option>Malaysia</option>
                 <option>Mexico</option>
                 <option>Northern Mariana Islands</option>
                 <option>Puerto Rico</option>
@@ -170,17 +178,21 @@
 
         <script>
             j = jQuery.noConflict();
+            var jsonFormData = {};
+            var addressData = {};
+            var formCountry = "";
+            var countryFormType = {};
+            var stateLabel = "";
+            var states = "";
 
             // apply Chosen jQuery plugin to form elements
             var applyChosen = function(){
                 j('.chzn-select').chosen();
             }
 
-            var jsonFormData = {};
-            var addressData = {};
-            var stateLabel = "";
-            var states = "";
-            var getFormData = function(url){
+            var getFormData = function(chosenCountry,url){
+                formCountry = chosenCountry;
+                console.log(chosenCountry);
                 j.getJSON(url,
                     function(data){
                         jsonFormData = data;
@@ -188,21 +200,65 @@
                     }
                 )
             }
+
             var updateAddressForm = function(formData){
                 addressData = j(formData)[0].country;
+                console.log(addressData);
                 for (i = 0; i < addressData.length; i++) {
-                    countrySelect = "";
+                    if (addressData[i].name == formCountry){
+                        createAddresssForm(addressData[i]);
+                    }
                 }
-                for (i = 0; i < addressData.length; i++) {
-                    states = "";
-                    labelValue  = addressData[i].name;
-                    stateLabel  = addressData[i].fields.state.label;
-                    for (s = 0; s < addressData[i].fields.state.members.length; s++ ){
-                        thisState = addressData[i].fields.state.members[s].name;
+            }
+
+            var createAddresssForm = function(formForCountry){
+                console.log(formForCountry.fieldOrder);
+                states = "";
+                labelValue  = formForCountry.name;
+                stateLabel  = formForCountry.fields.state.label;
+                if (formForCountry.fields.state.members.length > 0) {
+                    states = '<label for="' + stateLabel + '">' + stateLabel + '</label><select id="' + stateLabel + '" class="chzn-select">';
+                    for (s = 0; s < formForCountry.fields.state.members.length; s++ ){
+                        thisState = formForCountry.fields.state.members[s].name;
                         states = states + '<option value="' + thisState + '">' + thisState + '</option>';
                     }
+                    states = states + '</select><br>';
+                } else {
+                    states = '<br>';
+                }
+                if(formForCountry.fieldOrder == "Japanese"){
                     j('.widget_address').append(
-                        '<fieldset name="' + labelValue + '"><legend>' + labelValue + '</legend><label for="street_' + labelValue + '">' + addressData[i].fields.street + '</label><input id="street_' + labelValue + '" placeholder="' + addressData[i].fields.street + '"><br/><label for="city_' + labelValue + '">' + addressData[i].fields.city + '</label><input id="city_' + labelValue + '" placeholder="' + addressData[i].fields.city + '"><label for="' + stateLabel + '">' + stateLabel + '</label><select id="' + stateLabel + '" class="chzn-select">' + states + '</select><label for="postal_' + labelValue + '">' + addressData[i].fields.postal + '</label><input id="postal_' + labelValue + '" placeholder="' + addressData[i].fields.postal + '"></fieldset>');
+                        '<fieldset name="' + labelValue +'"><legend>' + labelValue + '</legend>'
+                        + '<label for="postal_' + labelValue + '"> ' + formForCountry.fields.postal + ' 〒</label>'
+                        + '<input id="postal_' + labelValue + '" placeholder="' + formForCountry.fields.postal + '">'
+                        + states
+                        + '<label for="city_' + labelValue + '">' + formForCountry.fields.city + '</label>'
+                        + '<input id="city_' + labelValue + '" placeholder="' + formForCountry.fields.city + '">'
+                        + '<label for="street_' + labelValue + '">' + formForCountry.fields.street + '</label><br>'
+                        + '<input id="street_' + labelValue + '" placeholder="' + formForCountry.fields.street + '">'
+                        + '</fieldset>');
+                } else if(formForCountry.fieldOrder == "European"){
+                    j('.widget_address').append(
+                        '<fieldset name="' + labelValue +'"><legend>' + labelValue + '</legend>'
+                        + '<label for="street_' + labelValue + '">' + formForCountry.fields.street + '</label><br>'
+                        + '<input id="street_' + labelValue + '" placeholder="' + formForCountry.fields.street + '">'
+                        + '<label for="city_' + labelValue + '">' + formForCountry.fields.city + '</label>'
+                        + '<input id="city_' + labelValue + '" placeholder="' + formForCountry.fields.city + '">'
+                        + '<label for="postal_' + labelValue + '">' + formForCountry.fields.postal + '</label>'
+                        + '<input id="postal_' + labelValue + '" placeholder="' + formForCountry.fields.postal + '">'
+                        + states
+                        + '</fieldset>');
+                } else { // "Western"
+                    j('.widget_address').append(
+                        '<fieldset name="' + labelValue +'"><legend>' + labelValue + '</legend>'
+                        + '<label for="street_' + labelValue + '">' + formForCountry.fields.street + '</label>'
+                        + '<input id="street_' + labelValue + '" placeholder="' + formForCountry.fields.street + '"><br/>'
+                        + '<label for="city_' + labelValue + '">' + formForCountry.fields.city + '</label>'
+                        + '<input id="city_' + labelValue + '" placeholder="' + formForCountry.fields.city + '">'
+                        + states
+                        + '<label for="postal_' + labelValue + '">' + formForCountry.fields.postal + '</label>'
+                        + '<input id="postal_' + labelValue + '" placeholder="' + formForCountry.fields.postal + '">'
+                        + '</fieldset>');
                 }
                 applyChosen();
             }
@@ -211,19 +267,25 @@
                 var duration = 250;
                 j('.current').removeClass('current');
                 j('.new_address_form').hide();
-                j('.widget_address').html();
-                getFormData('js/widget.json');
+                j('.widget_address').html('');
                 switch(j('#country').val()){
                     case "" :
                         // User deselected country. Clear form.
                         break;
-                    case "Canada" :
+                    case 'Canada' :
+                        getFormData('Canada','js/widget.json');
                         break;
-                    case "Japan" :
+                    case 'Japan' :
+                        getFormData('Japan','js/widget.json');
                         break;
-                    case "United States" :
+                    case 'Malaysia' :
+                        getFormData('Malaysia','js/widget.json');
+                        break;
+                    case 'United States' :
+                        getFormData('United States','js/widget.json');
                         break;
                     default:
+                        getFormData('Country','js/widget.json');
                         break;
                 }
             });
