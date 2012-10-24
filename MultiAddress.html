@@ -162,7 +162,10 @@
         </form>
 
         <!-- jquery is already defined in DEVNet, this is for mockups only -->
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+        <!-- 
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+        -->
+        <script src="js/jquery-1.7.1.min.js"></script>
         <script src="js/chosen.jquery.min.js"></script><!-- XXTODOXX: add chosen to the javascript browser resource type -->
 
         <script>
@@ -176,7 +179,7 @@
             var jsonFormData = {};
             var addressData = {};
             var stateLabel = "";
-            var states = [];
+            var states = "";
             var getFormData = function(url){
                 j.getJSON(url,
                     function(data){
@@ -188,14 +191,18 @@
             var updateAddressForm = function(formData){
                 addressData = j(formData)[0].country;
                 for (i = 0; i < addressData.length; i++) {
-                    states = [];
+                    countrySelect = "";
+                }
+                for (i = 0; i < addressData.length; i++) {
+                    states = "";
                     labelValue  = addressData[i].name;
                     stateLabel  = addressData[i].fields.state.label;
                     for (s = 0; s < addressData[i].fields.state.members.length; s++ ){
-                        states.push(addressData[i].fields.state.members[s].name);
+                        thisState = addressData[i].fields.state.members[s].name;
+                        states = states + '<option value="' + thisState + '">' + thisState + '</option>';
                     }
                     console.log('states: ' + states);
-                    j('.widget_address').append('<fieldset name="' + labelValue + '"><legend>' + labelValue + '</legend><label for="' + stateLabel + '">' + stateLabel + '</label><select id="' + stateLabel + '"></select></fieldset>');
+                    j('.widget_address').append('<fieldset name="' + labelValue + '"><legend>' + labelValue + '</legend><label for="' + stateLabel + '">' + stateLabel + '</label><select id="' + stateLabel + ' class="chzn-select">' + states + '</select></fieldset>');
                 }
             }
 
@@ -216,6 +223,7 @@
                     default:
                         break;
                 }
+                applyChosen();
             });
 
             j('#new_address').click(function(){
