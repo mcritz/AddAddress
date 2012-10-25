@@ -267,27 +267,30 @@
                 var duration = 250;
                 j('.current').removeClass('current');
                 j('.new_address_form').hide();
-                j('.widget_address').html('');
-                switch(j('#country').val()){
-                    case "" :
-                        // User deselected country. Clear form.
-                        break;
-                    case 'Canada' :
-                        getFormData('Canada','js/widget.json');
-                        break;
-                    case 'Japan' :
-                        getFormData('Japan','js/widget.json');
-                        break;
-                    case 'Malaysia' :
-                        getFormData('Malaysia','js/widget.json');
-                        break;
-                    case 'United States' :
-                        getFormData('United States','js/widget.json');
-                        break;
-                    default:
-                        getFormData('Country','js/widget.json');
-                        break;
-                }
+                j('.widget_address').fadeOut('fast',function(){
+                    j(this).html('');
+                    switch(j('#country').val()){
+                        case "" :
+                            // User deselected country. Clear form.
+                            break;
+                        case 'Canada' :
+                            getFormData('Canada','js/widget.json');
+                            break;
+                        case 'Japan' :
+                            getFormData('Japan','js/widget.json');
+                            break;
+                        case 'Malaysia' :
+                            getFormData('Malaysia','js/widget.json');
+                            break;
+                        case 'United States' :
+                            getFormData('United States','js/widget.json');
+                            break;
+                        default:
+                            getFormData('Country','js/widget.json');
+                            break;
+                    }
+                    j(this).fadeIn('fast');
+                });
             });
 
             j('#new_address').click(function(){
