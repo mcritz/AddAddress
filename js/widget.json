@@ -3,7 +3,7 @@
 	[
 		{
 			"name":"Country",
-			"fieldOrder":"Western",
+			"fieldOrder":"default",
 			"fields":
 			{
 				"street":"Street",
@@ -18,7 +18,7 @@
 		},
 		{
 			"name":"United States",
-			"fieldOrder":"Western",
+			"fieldOrder":"default",
 			"fields":
 			{
 				"street":"Street",
@@ -36,7 +36,7 @@
 		},
 		{
 			"name":"Canada",
-			"fieldOrder":"Western",
+			"fieldOrder":"default",
 			"fields":
 			{
 				"street":"Street",
@@ -54,7 +54,7 @@
 		},
 		{
 			"name":"Japan",
-			"fieldOrder":"Japanese",
+			"fieldOrder":"japanese",
 			"fields":
 			{
 				"street":"Street Address",
@@ -72,7 +72,7 @@
 		},
 		{
 			"name":"Malaysia",
-			"fieldOrder":"European",
+			"fieldOrder":"european",
 			"fields":
 			{
 				"street":"Street",
