@@ -4,10 +4,12 @@ var countrySelect = j('#country');
 SCEDEV = {};
 SCEDEV.AddressWidget = {
     generateFormElements : function(selected_country_code, field_prefix, field_data, country_info) {
-       var countryinfo = this.getCountryStateInfo(country_info,selected_country_code);
-       var widgetDiv = findWidgetByPrefix(field_prefix);
-       // this.resetForm(widgetDiv);
-       // this.generateFieldsAndLabels(widgetDiv, countryinfo);
+        var countryinfo = this.getCountryStateInfo(country_info,selected_country_code);
+        var widgetDiv = findWidgetByPrefix(field_prefix);
+        if (this.findWidgetByPrefix(selected_country_code)){
+            this.removeWidget(selected_country_code);
+        }
+        this.generateFieldsAndLabels(widgetDiv, countryinfo);
        // if(has_existing_data) {
            // this.populateWidget(widgetDiv, data);
        //}
@@ -22,17 +24,20 @@ SCEDEV.AddressWidget = {
         }
         throw 'No country Code Found!';
     },
-    // applyChosen : function(){
-    //     j('.chzn-select').chosen();
-    // },
     findWidgetByPrefix : function(field_prefix){
         return j('.address_widget[name|="' + field_prefix + '"]');
     },
-    clearWidget : function(element){
-        element.html('');
+    removeWidget : function(element){
+        element.remove();
     },
-    createFields : function(addressData){
-        return addressData;
+    generateFieldsAndLabels : function(addressData) {
+        var selectedCountry = j('#country').val();
+        var countryName = selectedCountry.name;
+        return(countryName);
+    },
+    createWidgetDiv : function(addressData,fieldPrefix){
+        selectForAddressWidget = j('#' + fieldPrefix + 'country_chzn');
+        selectForAddressWidget.after('<div class="address_widget ' + addressData.name + '" name="' + fieldPrefix + 'address_widget">Hello</div>');
     }
 }
 var jsonURL = 'js/widget.json';

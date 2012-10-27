@@ -43,18 +43,24 @@ var countryStateInfo =
 			}
 		]
 	};
+/* 
+ * Test environment
+ */
+
+test('The browser should', function(){
+		equal( j === jQuery, 	true, 'have jQuery is loaded & aliased to var j');
+		equal( 	j('.chzn-select').hasClass('chzn-done'), true, 'have jQuery-chosen plugin installed' );
+		equal( typeof(SCEDEV), 'object' , 'SCEDEV should be a defined object')
+});
 
 /*
  * Test for fail
  */
-var countryCode = 'This code doesnt exist';
-
-// test('SCEDEV should be defined', fucntion(){
-
-// });
 
 test('A nonexistant country code should', function(){
 	var exceptionThrown = false;
+	var countryCode = 'This code doesnt exist';
+
 	try {
 		var countryCode = 'This code doesnt exist';
 		var result = SCEDEV.AddressWidget.getCountryStateInfo(countryStateInfo,countryCode);
@@ -120,19 +126,23 @@ test('When given a field_prefix should', function(){
 	equal( result.attr('name'), field_prefix, 'find the correct element');
 });
 
-test('When asked to be reset an address_widget should',function(){
-	var field_prefix = 'james_';
+test('When asked to be remove an address_widget should',function(){
+	var field_prefix = 'remove_';
 	var someDiv = j('.address_widget[name|="' + field_prefix + '"]');
-	result = SCEDEV.AddressWidget.clearWidget(someDiv);
-	equal( someDiv.html(), '', 'not have conent')
+	SCEDEV.AddressWidget.removeWidget(someDiv);
+	result = j('.address_widget[name|="' + field_prefix + '"]').length;
+	equal( result, 0, 'remove the div')
 });
 
-test('When given new form data should', function(){
+test('When given new form data it should', function(){
 	var addressData = countryStateInfo.country[0];
-	var field_prefix = countryStateInfo.country[0].field_prefix;
+	var fieldPrefix = 'shipping_';
 
-	SCEDEV.AddressWidget.createFields(addressData);
-	equal( j('.address_widget[name|="' + field_prefix +'"]').attr('name'), field_prefix , 'create an address_widget with the correct field_prefix' );
+	result = SCEDEV.AddressWidget.createWidgetDiv(addressData,fieldPrefix);
+	equal( j('.address_widget').attr('name'),
+		'shipping_address_widget',
+		'create an address_widget div with the right name attribute');
+	equal( j('.address_widget').hasClass('Critzilvania'), true, 'with the right class attribute')
 });
 
 /*
