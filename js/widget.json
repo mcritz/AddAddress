@@ -4,6 +4,7 @@
 		{
 			"name":"Country",
 			"fieldOrder":"default",
+			"code":"ZZ",
 			"fields":
 			{
 				"street":"Street",
@@ -19,6 +20,7 @@
 		{
 			"name":"United States",
 			"fieldOrder":"default",
+			"code":"US",
 			"fields":
 			{
 				"street":"Street",
@@ -37,6 +39,7 @@
 		{
 			"name":"Canada",
 			"fieldOrder":"default",
+			"code":"CA",
 			"fields":
 			{
 				"street":"Street",
@@ -55,6 +58,7 @@
 		{
 			"name":"Japan",
 			"fieldOrder":"japanese",
+			"code":"JP",
 			"fields":
 			{
 				"street":"Street Address",
@@ -73,6 +77,7 @@
 		{
 			"name":"Malaysia",
 			"fieldOrder":"european",
+			"code":"MA",
 			"fields":
 			{
 				"street":"Street",

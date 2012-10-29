@@ -6,7 +6,6 @@ var countryStateInfo =
 		[
 			{
 				"name":"Critzilvania",
-				"field_prefix":"critz_",
 				"code":"CZ",
 				"fieldOrder":"default",
 				"fields":
@@ -23,7 +22,6 @@ var countryStateInfo =
 			},
 			{
 				"name":"Jamesistan",
-				"field_prefix":"james_",
 				"code":"JZ",
 				"fieldOrder":"japanese",
 				"fields":
@@ -91,8 +89,8 @@ test('A valid country code for a country with NO states should',function(){
 
 
 	equal ( typeof result, 'object', 'return an object');
-	equal ( result.field_prefix, 'critz_', 'have a field_prefix');
-	// equal ( result.name, 'Critzilvania', 'have a name matching the country code');
+	// equal ( result.field_prefix, 'critz_', 'have a field_prefix');
+	equal ( result.name, 'Critzilvania', 'have a name matching the country code');
 	equal ( result.fields.street, 'Street', 'have a street label');
 	equal ( result.fields.state.label, '', 'have NO state label');
 	equal ( result.fields.city, 'Megapolis', 'have a city label');
@@ -111,79 +109,117 @@ test('A valid country code for a country with states should',function(){
 	// ------
 	ok( ('hi!').toString, '-- Share the non-state properties below --');
 	equal ( typeof result, 'object', 'return an object');
-	equal ( result.field_prefix, 'james_', 'have a field_prefix');
-	// equal ( result.name, 'Jamesistan', 'have a name matching the country code');
+	// equal ( result.field_prefix, 'james_', 'have a field_prefix');
+	equal ( result.name, 'Jamesistan', 'have a name matching the country code');
 	equal ( result.fields.street, 'Street Address', 'have a street label');
 	equal ( result.fields.city, 'Municipality', 'have a city label');
 	equal ( result.fields.postal, 'Waste Designation', 'have a postal code label');
 	equal ( result.fieldOrder, 'japanese', 'Have a field order')
 });
 
-test('When given a field_prefix should', function(){
+test('When given a field_prefix to be removed should', function(){
 	var field_prefix = 'james_';
-	result = SCEDEV.AddressWidget.findWidgetByPrefix(field_prefix);
+	result = SCEDEV.AddressWidget.removeWidgetByPrefix(field_prefix);
 
-	equal( result.attr('name'), field_prefix, 'find the correct element');
+	equal( j('.address_widget[name*="james_"]').length, 0, 'remove all matched elements');
 });
 
-test('When asked to be remove an address_widget should',function(){
-	var field_prefix = 'remove_';
-	var someDiv = j('.address_widget[name|="' + field_prefix + '"]');
-	SCEDEV.AddressWidget.removeWidget(someDiv);
-	result = j('.address_widget[name|="' + field_prefix + '"]').length;
-	equal( result, 0, 'remove the div')
+test('When given country data it should', function(){
+	var countryCode = 'CZ'
+	var aValidCountry = countryStateInfo.country[0];
+	var field_prefix = 'billing_';
+	var result = SCEDEV.AddressWidget.generateFieldsAndLabels(countryCode, aValidCountry, field_prefix);
+
+	var regex = /fieldset.*name..CZ/;
+	equal( result.search(regex) != -1, true, 'contain a fieldset with the right name attribute.');
+	
+	var regex = /legend.Critzilvania/;
+	equal( result.search(regex) != -1, true, 'contain a legend with the right country name.');
+
+	var regex = /label.for="billing_street".Street/;
+	equal( result.search(regex) != -1, true, 'contain a label with the right street name.');
+
+	var regex = /label.for="billing_city".Megapolis/;
+	equal( result.search(regex) != -1, true, 'contain a label with the right city name.');
+
+	var regex = /label.for="billing_postal".Disputed/;
+	equal( result.search(regex) != -1, true, 'contain a label with the right postal name.');
+
+	var regex = /select/;
+	equal (result.search(regex) != -1, false, 'NOT have a select for states if NONE are present.');
+
+	var countryCode = 'JZ';
+	var aValidCountry = countryStateInfo.country[1];
+	var field_prefix = 'shipping_';
+	var result = SCEDEV.AddressWidget.generateFieldsAndLabels(countryCode, aValidCountry, field_prefix);
+	var regex = /label for=\"shipping_state\"/;
+	equal ( result.search(regex) != -1, true, 'have a label for states if some are present');
+	var regex = /select id=\"shipping_state/;
+	equal( result.search(regex) != -1, true, 'have a select if states if some are present.' );
+
+	var regex = /option/;
+	equal( result.search(regex) != -1, true, 'have at least one option if states are present.');
 });
 
-test('When given new form data it should', function(){
+
+/*
+ * Test the created DOM
+ */
+
+test('When given form data for a country with NO states it should', function(){
+	var countryCode = 'CZ';
 	var addressData = countryStateInfo.country[0];
 	var fieldPrefix = 'shipping_';
-
-	result = SCEDEV.AddressWidget.createWidgetDiv(addressData,fieldPrefix);
+	var labelsAndFields = SCEDEV.AddressWidget.generateFieldsAndLabels(countryCode, addressData, fieldPrefix);
+	//'<fieldset name="CZ"><legend>Critzilvania</legend><div class="row"><label for="billing_street">Street</label><input id="billing_street" placeholder="Street" /></div><div class="row"><label for="billing_city">Megapolis</label><input id="billing_city" placeholder="Megapolis" /></div><div class="row"><label for="billing_postal">Disputed Terrirotrial Area</label><input id="billing_postal"  placeholder="Disputed Terrirotrial Area" /></div>';
+	var result = SCEDEV.AddressWidget.createWidgetDiv(addressData,fieldPrefix, labelsAndFields);
 	equal( j('.address_widget').attr('name'),
 		'shipping_address_widget',
 		'create an address_widget div with the right name attribute');
-	equal( j('.address_widget').hasClass('Critzilvania'), true, 'with the right class attribute')
+	equal( j('.address_widget').hasClass('Critzilvania'), true, 'with the right class attribute');
+	// Street + City + Postal Code + (no states) = 3
+	equal ( j('.Critzilvania label').length, 3, 'create the right number of labels for no states');
+	equal ( j('.Critzilvania input').length, 3, 'create the right number of inputs for no states');
 });
 
+test('When given form data for a country WITH states it should', function(){
+	var countryCode = 'JZ';
+	var addressData = countryStateInfo.country[1];
+	var fieldPrefixStates = 'shipping_';
+	var labelsAndFieldsStates = SCEDEV.AddressWidget.generateFieldsAndLabels(countryCode, addressData,fieldPrefixStates);
+	//'<fieldset name="CZ"><legend>Critzilvania</legend><div class="row"><label for="billing_street">Street</label><input id="billing_street placeholder="Street" /></div><div class="row"><label for="billing_city">Megapolis</label><input id="billing_city placeholder="Megapolis" /></div><div class="row"><label for="billing_state">State</label><select id="billing_state"><option val="1">Critzachusetts</option></select></div><div class="row"><label for="billing_postal">Disputed Terrirotrial Area</label><input id="billing_postal placeholder="Disputed Terrirotrial Area" /></div>';
+	//
+	var result = SCEDEV.AddressWidget.createWidgetDiv(addressData,fieldPrefixStates, labelsAndFieldsStates);
+	
+	// Street + City + Postal Code + States = 4
+	equal ( j('.Jamesistan label').length, 4, 'create the right number of labels for a country with states');
+	// added the [id] selector here because chosen plugin will create additional inputs, but they have no id attribute
+	equal ( j('.Jamesistan input[id]').length, 3, 'create the right number of inputs for a country with states');
+	equal ( j('.Jamesistan select').attr('id'), 'shipping_state', 'create a select for states');
+	equal ( j('.Jamesistan option').length, 47, 'create the correct number of states for a given states select.');
+});
 /*
-	test('It should have jQuery aliased to j()', function(){
-		equal( j !== null, 		true, 'j is not null');
-		equal( j !== undefined, 	true, 'j is not undefined');
-		equal( j === jQuery, 	true, 'jQuery is loaded & aliased');
-	});
-	test('Chosen jQuery plugin should be applied to all .chzn-select selects', function(){
-		equal( 	j('.chzn-select').hasClass('chzn-done'), true, 'chosen is loaded' );
-	});
-	test('The default state of the address_widget is empty', function(){
-		equal( j('.address_widget').html(), '', 'contains no html');
-	});
-	test('Check user interaction -below-', function(){
-		expect( 0 );
+test('Check user interaction -below-', function(){
+	// expect( 0 );
+	countryToTest = 'CZ';
+	j('#shipping_country').val(countryToTest).trigger('change');
+	j('.address_widget').promise().done(function(){
+		test('When the user changes the country', function(){
 
-		countryOptions = j('#country option');
-		// for( i = 0; i < countryOptions.length ; i++){
-			// j('#country').val(countryOptions[i]).trigger('change');
-			countryToTest = 'Japan';
-			j('#country').val(countryToTest).trigger('change');
-			j('.address_widget').promise().done(function(){
-				test('Test behavior for chaning country', function(){
+			fieldsetToTest = j('.United fieldset');
+			labelsToTest = j('.address_widget fieldset').find('label');
+			inputsToTest = j('.address_widget fieldset').find('input');
 
-					fieldsetToTest = j('.address_widget fieldset');
-					labelsToTest = j('.address_widget fieldset').find('label');
-					inputsToTest = j('.address_widget fieldset').find('input');
-
-					equal( j.contains('.address_widget', '.wait'), true , 'a div with class .wait created');
-					equal( fieldsetToTest.find('legend').text(), countryToTest , 'a legend exists with for the matched country');
-					equal( j.contains(labelsToTest, 'postal_' + countryToTest), true , 'a label for postal_code exists for matched country');
-					equal( j.contains(inputsToTest, 'postal_' + countryToTest), true , 'an input for postal_code exists for matched country');
-					equal( j.contains(labelsToTest, 'states_' + countryToTest), true , 'a label for states exists for matched country');
-					equal( j('.address_widget fieldset select').attr('id'), 'states_' + countryToTest, true , 'a select for states exists for matched country');
-					equal( j.contains(labelsToTest, 'city_' + countryToTest), true , 'a label for city exists for matched country');
-					equal( j.contains(inputsToTest, 'city_' + countryToTest), true , 'an input for city exists for matched country');
-					equal( j.contains(labelsToTest, 'street_' + countryToTest), true , 'a label for street exists for matched country');
-					equal( j.contains(inputsToTest, 'street_' + countryToTest), true , 'an input for street exists for matched country');
-			 	});
-			});
-		// }
+			equal( fieldsetToTest.find('legend').text(), 'United States' , 'a legend exists with for the matched country');
+			equal( j.contains(labelsToTest, 'postal_' + countryToTest), true , 'a label for postal_code exists for matched country');
+			equal( j.contains(inputsToTest, 'postal_' + countryToTest), true , 'an input for postal_code exists for matched country');
+			equal( j.contains(labelsToTest, 'states_' + countryToTest), true , 'a label for states exists for matched country');
+			equal( j('.address_widget fieldset select').attr('id'), 'states_' + countryToTest, true , 'a select for states exists for matched country');
+			equal( j.contains(labelsToTest, 'city_' + countryToTest), true , 'a label for city exists for matched country');
+			equal( j.contains(inputsToTest, 'city_' + countryToTest), true , 'an input for city exists for matched country');
+			equal( j.contains(labelsToTest, 'street_' + countryToTest), true , 'a label for street exists for matched country');
+			equal( j.contains(inputsToTest, 'street_' + countryToTest), true , 'an input for street exists for matched country');
+	 	});
+	});
 });
 */
