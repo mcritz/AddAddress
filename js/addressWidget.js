@@ -8,10 +8,10 @@ SCEDEV.AddressWidget = {
         var widgetDiv = this.removeWidgetByPrefix(field_prefix);
         var labelsAndInputs = this.generateFieldsAndLabels(selected_country_code,countryInfo,field_prefix);
         this.createWidgetDiv(countryInfo, field_prefix, labelsAndInputs);
-       // if(has_existing_data) {
-           // this.populateWidget(widgetDiv, data);
-       //}
-       return field_prefix + ' address set to ' + selected_country_code + '.';
+        if(!j.isEmptyObject(field_data)) {
+            this.populateFields(field_data, field_prefix);
+        }
+        return field_prefix + ' address set to ' + selected_country_code + '.';
     }
     , getCountryStateInfo : function(countryStateInfo,countryCode){
         addressData = countryStateInfo.country;
@@ -22,7 +22,7 @@ SCEDEV.AddressWidget = {
         }
         throw 'No country Code Found!';
     }
-    , removeWidgetByPrefix : function(field_prefix){
+    , removeWidgetByPrefix : function(field_prefix) {
         var addressWidgetDivToBeRemoved = j('.address_widget[name*="' + field_prefix + '"]');
         addressWidgetDivToBeRemoved.remove();
         return addressWidgetDivToBeRemoved;
@@ -65,54 +65,23 @@ SCEDEV.AddressWidget = {
     }
     , createInput : function(countryField, countryFieldLabel, field_prefix) {
         var labelAndInput = '<div class="row"><label for="' + field_prefix + countryField+ '">'
-        labelAndInput += countryFieldLabel +'</label><input id="' + field_prefix + countryField + '" "' + '" placeholder="' + countryFieldLabel + '" /></div>';
+        labelAndInput += countryFieldLabel +'</label><input id="' + field_prefix + countryField + '" placeholder="' + countryFieldLabel + '" /></div>';
         return(labelAndInput);
     }
-    , createWidgetDiv : function(addressData, fieldPrefix, labelsAndInputs){
+    , createWidgetDiv : function(addressData, fieldPrefix, labelsAndInputs) {
         // console.log('createWidgetDiv: \n' + addressData + '\n' + fieldPrefix + '\n' + labelsAndInputs);
         selectForAddressWidget = j('#' + fieldPrefix + 'country_chzn');
         selectForAddressWidget.after('<div class="address_widget ' + addressData.name + '" name="' + fieldPrefix + 'address_widget">' + labelsAndInputs + '</div>');
         j('.chzn-select').chosen();
     }
+    , populateFields : function(field_data, field_prefix) {
+        var streetValue = field_data.streetAddress1[0].value;
+        var cityValue   = field_data.city[0].value;
+        var postalValue = field_data.zip[0].value;
+        var stateValue  = field_data.state[0].value;
+        j('div[name*=' + field_prefix + '] input#' + field_prefix + 'street').val(streetValue);
+        j('div[name*=' + field_prefix + '] input#' + field_prefix + 'city').val(cityValue);
+        j('div[name*=' + field_prefix + '] input#' + field_prefix + 'postal').val(postalValue);
+        j('select#' + field_prefix + 'state').val(stateValue).trigger('change');
+    }
 }
-
-
-/*
- * EVERYTHING BELOW IS TO BE DELETED. Fixture data to demo.
- */
-
-var jsonURL = 'js/widget.json';
-var transitionDuration = 250;
-
-var addressData = {};
-var formCountry = "";
-var countryFormType = {};
-var stateLabel = "";
-var states = "";
-fixtureCountryInfo = {};
-
-// apply Chosen jQuery plugin to form elements
-var applyChosen = function(){
-    j('.chzn-select').chosen();
-}
-
-var initCountryStateInfo = function(){
-    // formCountry = chosenCountry;
-    j.getJSON(jsonURL,
-        function(data){
-            fixtureCountryInfo = data;
-            console.log(fixtureCountryInfo);
-        }
-    )
-}
-
-j('#shipping_country').change(function(){
-    var selected_country_code = j('#shipping_country').val();
-    SCEDEV.AddressWidget.generateFormElements(selected_country_code, 'shipping_', '', fixtureCountryInfo);
-});
-
-
-j(document).ready(function(){
-    initCountryStateInfo();
-    applyChosen();
-});

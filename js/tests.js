@@ -1,5 +1,23 @@
 j = jQuery.noConflict();
-
+var fieldData =
+	{
+		"state": [
+			{"value":"Mie"},
+			{"errorMessage":""}
+		],
+		"streetAddress1":[
+				{"value":"64 Baker Street"},
+				{"errorMessage":"Baker Street Irregulars"}
+		],
+		"city":[
+			{"value":"Sagamihara"},
+			{"errorMessage":"Sagamihara is not in Jamesistan."}
+		],
+		"zip":[
+			{"value":"ABC123"},
+			{"errorMessage":"This cannot be blank. Must have 3 letters and 3 digits seperated by a space."}
+		]
+	}
 var countryStateInfo =
 	{
 		"country":
@@ -68,18 +86,35 @@ test('A nonexistant country code should', function(){
 	ok(exceptionThrown, 'throw an exception');
 });
 
+test('Nonexistant field_data should', function(){
+	var selected_country_code = 'JZ';
+	var field_prefix = 'shipping_';
+	var emptyFieldData = {};
+	var countryInfo = countryStateInfo;
+	SCEDEV.AddressWidget.generateFormElements(
+		selected_country_code,
+		field_prefix,
+		emptyFieldData,
+		countryInfo
+		);
+	equal(j('.Jamesistan input').val(), '', 'have no prepopulated fields.');
+	equal(j('.Jamesistan .error').length, 0, 'have no elements of class .error.');
+	// tear down this test
+	SCEDEV.AddressWidget.removeWidgetByPrefix('shipping_');
+});
+
 /*
  * Test for valid country
-	
-	1. Did I get an object?
-	2. Did it have a country name?
-	3. Did it have a street label?
-	4. Did it have a city label?
-	5. When a country has states does it give me a state label?
-	6. Does it have a postal code label?
-	7. Does it have a field order?
-	8. Does it have an oid value?
-
+	/
+		1. Did I get an object?
+		2. Did it have a country name?
+		3. Did it have a street label?
+		4. Did it have a city label?
+		5. When a country has states does it give me a state label?
+		6. Does it have a postal code label?
+		7. Does it have a field order?
+		8. Does it have an oid value?
+	/
  */
 
 test('A valid country code for a country with NO states should',function(){
@@ -161,7 +196,6 @@ test('When given country data it should', function(){
 	equal( result.search(regex) != -1, true, 'have at least one option if states are present.');
 });
 
-
 /*
  * Test the created DOM
  */
@@ -197,6 +231,8 @@ test('When given form data for a country WITH states it should', function(){
 	equal ( j('.Jamesistan input[id]').length, 3, 'create the right number of inputs for a country with states');
 	equal ( j('.Jamesistan select').attr('id'), 'shipping_state', 'create a select for states');
 	equal ( j('.Jamesistan option').length, 47, 'create the correct number of states for a given states select.');
+	// tear down this test
+	SCEDEV.AddressWidget.removeWidgetByPrefix('shipping_');
 });
 /*
 test('Check user interaction -below-', function(){
@@ -223,3 +259,26 @@ test('Check user interaction -below-', function(){
 	});
 });
 */
+
+/*
+ * Test for valid field Data
+ */
+test('When given valid field data should', function(){
+	var selected_country_code = 'JZ';
+	var field_prefix = 'shipping_';
+	var validFieldData = fieldData;
+	var countryInfo = countryStateInfo;
+	SCEDEV.AddressWidget.generateFormElements(
+		selected_country_code,
+		field_prefix,
+		fieldData,
+		countryInfo
+		);
+	equal( j('.Jamesistan input#shipping_street').val(), '64 Baker Street', 'have the correct value for street.');
+	equal( j('.Jamesistan input#shipping_city').val(), 'Sagamihara', 'have the correct value for city.');
+	equal( j('.Jamesistan input#shipping_postal').val(), 'ABC123', 'have the correct value for postal code.');
+	equal( j('.Jamesistan select#shipping_state').val(), 'Mie', 'have the correct value for state.');
+	equal( j('.Jamesistan .chzn-single span').text(), 'Mie', 'have the correct text displayed in the chosen dropdown UI');
+	equal( j('.Jamesistan .error').length, 3, 'have the correct number of divs with class .error.');
+	equal( j('.Jamesistan .error').text(), 'some error message', 'have the correct error text for field.');
+});

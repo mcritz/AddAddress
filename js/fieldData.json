@@ -1,0 +1,18 @@
+{
+	"state": [
+		{"value":"Mie"},
+		{"errorMessage":""}
+	],
+	"streetAddress1":[
+			{"value":"64 Baker Street"},
+			{"errorMessage":"Baker Street Irregulars"}
+	],
+	"city":[
+		{"value":"Sagamihara"},
+		{"errorMessage":"Sagamihara is not in Jamesistan."}
+	],
+	"zip":[
+		{"value":"ABC123"},
+		{"errorMessage":"This cannot be blank. Must have 3 letters and 3 digits seperated by a space."}
+	]
+}

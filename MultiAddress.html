@@ -178,6 +178,57 @@
 
         <script src="js/addressWidget.js"></script>
 
+        <script>
+            /*
+             * Fixture data to demo.
+             */
+            var countryURL   = 'js/widget.json';
+            var fieldDataURL = 'js/fieldData.json';
+            var transitionDuration = 250;
+
+            var addressData = {};
+            var formCountry = "";
+            var countryFormType = {};
+            var stateLabel = "";
+            var states = "";
+            fixtureCountryInfo  = {};
+            fixtureFieldData    = {};
+
+            // apply Chosen jQuery plugin to form elements
+            var applyChosen = function(){
+                j('.chzn-select').chosen();
+            }
+
+            var initCountryStateInfo = function(){
+                // formCountry = chosenCountry;
+                j.getJSON(countryURL,
+                    function(data){
+                        fixtureCountryInfo = data;
+                        // console.log(fixtureCountryInfo);
+                    }
+                );
+                j.getJSON(fieldDataURL,
+                    function(fieldData){
+                        fixtureFieldData = fieldData;
+                        if (!j.isEmptyObject(fixtureFieldData)) {
+                            // j('#shipping_country').val('JP').trigger('change');
+                            // console.log('fixtureCountryInfo:\n' + fixtureCountryInfo);
+                        }
+                    }
+                );
+            }
+
+            j('#shipping_country').change(function(){
+                var selected_country_code = j('#shipping_country').val();
+                SCEDEV.AddressWidget.generateFormElements(selected_country_code, 'shipping_', fixtureFieldData, fixtureCountryInfo);
+            });
+
+
+            j(document).ready(function(){
+                initCountryStateInfo();
+                applyChosen();
+            });
+        </script>
 
         <script src="http://code.jquery.com/qunit/qunit-1.10.0.js"></script>
         <script src="js/tests.js"></script>
