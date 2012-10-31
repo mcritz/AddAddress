@@ -1,87 +1,94 @@
 j = jQuery.noConflict();
-var countrySelect = j('#country');
 
 SCEDEV = {};
 SCEDEV.AddressWidget = {
-    generateFormElements : function(selected_country_code, field_prefix, field_data, country_info) {
-        var countryInfo = this.getCountryStateInfo(country_info,selected_country_code);
+    generateFormElements : function(field_prefix, field_order, labels_for_this_country, list_of_states, field_values, field_errors) {
         var widgetDiv = this.removeWidgetByPrefix(field_prefix);
-        var labelsAndInputs = this.generateFieldsAndLabels(selected_country_code,countryInfo,field_prefix);
-        this.createWidgetDiv(countryInfo, field_prefix, labelsAndInputs);
-        if(!j.isEmptyObject(field_data)) {
-            this.populateFields(field_data, field_prefix);
+        var labelsAndInputs = this.generateFieldsAndLabels(field_order, list_of_states, labels_for_this_country, field_prefix);
+        this.createWidgetDiv(field_prefix, labelsAndInputs);
+        if(!j.isEmptyObject(field_values)) {
+            this.populateFields(field_values, field_prefix);
         }
-        return field_prefix + ' address set to ' + selected_country_code + '.';
-    }
-    , getCountryStateInfo : function(countryStateInfo,countryCode){
-        addressData = countryStateInfo.country;
-        for (i = 0; i < addressData.length; i++) {
-            if (addressData[i].code == countryCode){
-                return addressData[i];
-            }
+        if(!j.isEmptyObject(field_errors)) {
+            this.displayErrors(field_errors, field_prefix);
         }
-        throw 'No country Code Found!';
+        return field_prefix + ' address widget set.';
     }
     , removeWidgetByPrefix : function(field_prefix) {
         var addressWidgetDivToBeRemoved = j('.address_widget[name*="' + field_prefix + '"]');
         addressWidgetDivToBeRemoved.remove();
         return addressWidgetDivToBeRemoved;
     }
-    , generateFieldsAndLabels : function(selected_country_code, countryInfo, field_prefix) {
+    , generateFieldsAndLabels : function(field_order, list_of_states, labels_for_this_country, field_prefix) {
         var fieldsAndLabels = '';
-        // console.log('countryInfo: \n' + countryInfo);
-        fieldsAndLabels += ('<fieldset name="' + selected_country_code +'"><legend>' + countryInfo.name + '</legend>');
+        var selectWithStates = '';
 
         // populate the states, if any
-        if (countryInfo.fields.state.members.length > 0){
-            var labelForStates = '<label for="' + field_prefix + 'state">' + countryInfo.fields.state.label + '</label>';
+        if (list_of_states.length > 0){
+            var labelForStates = '<div class="row ' + field_prefix + 'state"><label for="' + field_prefix + 'state">' + labels_for_this_country.state + '</label>';
             var selectWithStates = '<select id="' + field_prefix + 'state" class="chzn-select">';
-            for (var i = 0; i < countryInfo.fields.state.members.length; i++){
-                var stateOption = '<option val="' + countryInfo.fields.state.members[i].oid + '">' + countryInfo.fields.state.members[i].name + '</option>';
+            for (var i = 0; i < list_of_states.length; i++){
+                var stateOption = '<option val="' + list_of_states[i].oid + '">' + list_of_states[i].name + '</option>';
                 selectWithStates += stateOption;
             }
-            selectWithStates += '</select>';
+            selectWithStates += '</select></div>';
         }
 
         // Different field order for Japan
-        if (countryInfo.fieldOrder == 'japanese') {
-            fieldsAndLabels += this.createInput('postal', countryInfo.fields.postal, field_prefix);
-            if (countryInfo.fields.state.members.length > 0){
+        if (field_order == 'japanese') {
+            fieldsAndLabels += this.createInput('zip', labels_for_this_country.zip, field_prefix);
+            if (list_of_states.length > 0){
                 fieldsAndLabels += labelForStates + selectWithStates;
             }
-            fieldsAndLabels += this.createInput('city', countryInfo.fields.city, field_prefix);
-            fieldsAndLabels += this.createInput('street', countryInfo.fields.street, field_prefix);
+            fieldsAndLabels += this.createInput('city', labels_for_this_country.city, field_prefix);
+            fieldsAndLabels += this.createInput('address1', labels_for_this_country.address1, field_prefix);
         } else { // default
-            fieldsAndLabels += this.createInput('street', countryInfo.fields.street, field_prefix);
-            fieldsAndLabels += this.createInput('city', countryInfo.fields.city, field_prefix);
-            if (countryInfo.fields.state.members.length > 0){
+            fieldsAndLabels += this.createInput('address1', labels_for_this_country.address1, field_prefix);
+            fieldsAndLabels += this.createInput('city', labels_for_this_country.city, field_prefix);
+            if (list_of_states.length > 0){
                 fieldsAndLabels += labelForStates + selectWithStates;
             }
-            fieldsAndLabels += this.createInput('postal', countryInfo.fields.postal, field_prefix);
+            fieldsAndLabels += this.createInput('zip', labels_for_this_country.zip, field_prefix);
         }
-        fieldsAndLabels += '</fieldset>';
         return(fieldsAndLabels);
         // console.log('fieldsAndLabels:\n' + fieldsAndLabels);
     }
-    , createInput : function(countryField, countryFieldLabel, field_prefix) {
-        var labelAndInput = '<div class="row"><label for="' + field_prefix + countryField+ '">'
-        labelAndInput += countryFieldLabel +'</label><input id="' + field_prefix + countryField + '" placeholder="' + countryFieldLabel + '" /></div>';
+    , createInput : function(fieldName, countryFieldLabel, field_prefix) {
+        var labelAndInput = '<div class="row ' + field_prefix + fieldName + '"><label for="' + field_prefix + fieldName + '">'
+        labelAndInput += countryFieldLabel +'</label><input id="' + field_prefix + fieldName + '" placeholder="' + countryFieldLabel + '" /></div>';
         return(labelAndInput);
     }
-    , createWidgetDiv : function(addressData, fieldPrefix, labelsAndInputs) {
-        // console.log('createWidgetDiv: \n' + addressData + '\n' + fieldPrefix + '\n' + labelsAndInputs);
-        selectForAddressWidget = j('#' + fieldPrefix + 'country_chzn');
-        selectForAddressWidget.after('<div class="address_widget ' + addressData.name + '" name="' + fieldPrefix + 'address_widget">' + labelsAndInputs + '</div>');
-        j('.chzn-select').chosen();
+    , createWidgetDiv : function(fieldPrefix, labelsAndInputs) {
+        // console.log('createWidgetDiv: \n' + fieldPrefix + '\n' + labelsAndInputs);
+        selectForAddressWidget = j('#' + fieldPrefix + 'country_select');
+        // console.log(selectForAddressWidget);
+        selectForAddressWidget.after('<div class="address_widget ' + fieldPrefix + 'address_widget" name="' + fieldPrefix + 'address_widget">' + labelsAndInputs + '</div>');
+        // j('.chzn-select').chosen();
     }
-    , populateFields : function(field_data, field_prefix) {
-        var streetValue = field_data.streetAddress1[0].value;
-        var cityValue   = field_data.city[0].value;
-        var postalValue = field_data.zip[0].value;
-        var stateValue  = field_data.state[0].value;
-        j('div[name*=' + field_prefix + '] input#' + field_prefix + 'street').val(streetValue);
+    , populateFields : function(field_values, field_prefix) {
+        var streetValue = field_values.address1;
+        var cityValue   = field_values.city;
+        var postalValue = field_values.zip;
+        var stateValue  = field_values.state;
+        j('div[name*=' + field_prefix + '] input#' + field_prefix + 'address1').val(streetValue);
         j('div[name*=' + field_prefix + '] input#' + field_prefix + 'city').val(cityValue);
-        j('div[name*=' + field_prefix + '] input#' + field_prefix + 'postal').val(postalValue);
+        j('div[name*=' + field_prefix + '] input#' + field_prefix + 'zip').val(postalValue);
         j('select#' + field_prefix + 'state').val(stateValue).trigger('change');
+    }
+    , displayErrors : function(field_errors, field_prefix) {
+        j.each(field_errors, function(input,message){
+            if (message != '') {
+                console.log(input + ' : ' + message + '\n   for ' + field_prefix + input);
+                var errorDiv = SCEDEV.AddressWidget.createErrorDiv(message);
+                // console.log('errorDiv: ' + errorDiv);
+                var targetInput = j('div.row.' + field_prefix + input);
+                console.log(targetInput);
+                j(errorDiv).insertBefore(targetInput);
+            }
+        });
+    }
+    , createErrorDiv : function(errorMessage) {
+        errorHtml = '<div class="form-warning">' + errorMessage + '</div>';
+        return errorHtml;
     }
 }
