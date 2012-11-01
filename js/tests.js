@@ -29,6 +29,14 @@ var labelsForADefaultCountry =
 	"zip":"Post Office Number"
 }
 
+var labelsForJapan =
+{
+	"city":"Municipality",
+	"state":"Prefecture",
+	"address1":"JP Address",
+	"zip":"JP Postal Code"
+}
+
 var fieldValuesForAForm =
 {
 	"address1":"64 Baker Street",
@@ -45,9 +53,13 @@ var fieldErrorsForAForm =
 	"zip":"Please enter a postal code"
 }
 
+/*
+	note: this list is deliberately not in numeric order for OID
+	see test: When given form data for a country WITH states it should
+*/
 var listOfStatesForACountry = 
 [
-	{"name":"Hokkaido", "oid":1},{"name":"Aomori", "oid":2},{"name":"Iwate", "oid":3},{"name":"Miyagi", "oid":4},{"name":"Akita", "oid":5},{"name":"Yamagata", "oid":6},{"name":"Fukushima", "oid":7},{"name":"Ibaraki", "oid":8},{"name":"Tochigi", "oid":9},{"name":"Gunma", "oid":10},{"name":"Saitama", "oid":11},{"name":"Chiba", "oid":12},{"name":"Tokyo", "oid":13},{"name":"Kanagawa", "oid":14},{"name":"Niigata", "oid":15},{"name":"Toyama", "oid":16},{"name":"Ishikawa", "oid":17},{"name":"Fukui", "oid":18},{"name":"Yamanashi", "oid":19},{"name":"Nagano", "oid":20},{"name":"Gifu", "oid":21},{"name":"Shizuoka", "oid":22},{"name":"Aichi", "oid":23},{"name":"Mie", "oid":24},{"name":"Shiga", "oid":25},{"name":"Kyoto", "oid":26},{"name":"Osaka", "oid":27},{"name":"Hyogo", "oid":28},{"name":"Nara", "oid":29},{"name":"Wakayama", "oid":30},{"name":"Tottori", "oid":31},{"name":"Shimane", "oid":32},{"name":"Okayama", "oid":33},{"name":"Hiroshima", "oid":34},{"name":"Yamaguchi", "oid":35},{"name":"Tokushima", "oid":36},{"name":"Kagawa", "oid":37},{"name":"Ehime", "oid":38},{"name":"Kochi", "oid":39},{"name":"Fukuoka", "oid":40},{"name":"Saga", "oid":41},{"name":"Nagasaki", "oid":42},{"name":"Kumamoto", "oid":43},{"name":"Oita", "oid":44},{"name":"Miyazaki", "oid":45},{"name":"Kagoshima", "oid":46},{"name":"Okinawa", "oid":47}
+	{"name":"Hokkaido", "oid":1},{"name":"Aomori", "oid":2},{"name":"Iwate", "oid":3},{"name":"Miyagi", "oid":4},{"name":"Akita", "oid":5},{"name":"Yamagata", "oid":6},{"name":"Fukushima", "oid":7},{"name":"Ibaraki", "oid":8},{"name":"Tochigi", "oid":9},{"name":"Gunma", "oid":10},{"name":"Saitama", "oid":11},{"name":"Chiba", "oid":12},{"name":"Tokyo", "oid":13},{"name":"Kanagawa", "oid":14},{"name":"Niigata", "oid":15},{"name":"Toyama", "oid":16},{"name":"Fukui", "oid":18},{"name":"Yamanashi", "oid":19},{"name":"Nagano", "oid":20},{"name":"Gifu", "oid":21},{"name":"Shizuoka", "oid":22},{"name":"Aichi", "oid":23},{"name":"Mie", "oid":24},{"name":"Shiga", "oid":25},{"name":"Kyoto", "oid":26},{"name":"Osaka", "oid":27},{"name":"Hyogo", "oid":28},{"name":"Nara", "oid":29},{"name":"Wakayama", "oid":30},{"name":"Tottori", "oid":31},{"name":"Shimane", "oid":32},{"name":"Okayama", "oid":33},{"name":"Hiroshima", "oid":34},{"name":"Yamaguchi", "oid":35},{"name":"Tokushima", "oid":36},{"name":"Kagawa", "oid":37},{"name":"Ehime", "oid":38},{"name":"Kochi", "oid":39},{"name":"Fukuoka", "oid":40},{"name":"Saga", "oid":41},{"name":"Nagasaki", "oid":42},{"name":"Kumamoto", "oid":43},{"name":"Oita", "oid":44},{"name":"Miyazaki", "oid":45},{"name":"Kagoshima", "oid":46},{"name":"Okinawa", "oid":47},{"name":"Ishikawa", "oid":17}
 ]
 
 var countryStateInfo =
@@ -132,40 +144,6 @@ test('A nonexistant country code should', function(){
 	/
  */
 
-// test('A valid country code for a country with NO states should',function(){
-
-// 	var countryCode = 'CZ';
-// 	var result = SCEDEV.AddressWidget.getCountryStateInfo(countryStateInfo,countryCode);
-
-
-// 	equal ( typeof result, 'object', 'return an object');
-// 	// equal ( result.field_prefix, 'critz_', 'have a field_prefix');
-// 	equal ( result.name, 'Critzilvania', 'have a name matching the country code');
-// 	equal ( result.fields.street, 'Street', 'have a street label');
-// 	equal ( result.fields.state.label, '', 'have NO state label');
-// 	equal ( result.fields.city, 'Megapolis', 'have a city label');
-// 	equal ( result.fields.postal, 'Disputed Terrirotrial Area', 'have a postal code label')
-// 	equal ( result.fieldOrder, 'default', 'Have a field order')
-// });
-
-// test('A valid country code for a country with states should',function(){
-// 	var countryCode = 'JZ';
-// 	var result = SCEDEV.AddressWidget.getCountryStateInfo(countryStateInfo,countryCode);
-
-// 	equal ( result.fields.state.label, 'Prefecture', 'have a state label');
-// 	equal( typeof result.fields.state.members, 'object', 'have an object named members');
-// 	equal(result.fields.state.members.length, '47', 'have some states');
-
-// 	// ------
-// 	ok( ('hi!').toString, '-- Share the non-state properties below --');
-// 	equal ( typeof result, 'object', 'return an object');
-// 	// equal ( result.field_prefix, 'james_', 'have a field_prefix');
-// 	equal ( result.name, 'Jamesistan', 'have a name matching the country code');
-// 	equal ( result.fields.street, 'Street Address', 'have a street label');
-// 	equal ( result.fields.city, 'Municipality', 'have a city label');
-// 	equal ( result.fields.postal, 'Waste Designation', 'have a postal code label');
-// 	equal ( result.fieldOrder, 'japanese', 'Have a field order')
-// });
 
 test('When given a field_prefix to be removed should', function(){
 	var field_prefix = 'james_';
@@ -249,20 +227,20 @@ test('When given form data for a country WITH states it should', function(){
 		labelsForADefaultCountry,
 		fieldPrefixStates
 	);
-	var result = SCEDEV.AddressWidget.createWidgetDiv(fieldPrefixStates, labelsAndFieldsStates);
+	SCEDEV.AddressWidget.createWidgetDiv(fieldPrefixStates, labelsAndFieldsStates);
 	
 	// Street + City + Postal Code + States = 4
 	equal ( j('.shipping_address_widget label').length, 4, 'create the right number of labels for a country with states');
 	// added the [id] selector here because chosen plugin will create additional inputs, but they have no id attribute
 	equal ( j('.shipping_address_widget input[id]').length, 3, 'create the right number of inputs for a country with states');
 	equal ( j('.shipping_address_widget select').attr('id'), 'shipping_state', 'create a select for states');
-	equal ( j('.shipping_address_widget option').length, 47, 'create the correct number of states for a given states select.');
+	var result = j('.shipping_address_widget select').children();
+	equal (result.length, 47, 'create the correct number of states for a given states select.');
+	console.log(j(result[17]).val());
 	// tear down this test
 	SCEDEV.AddressWidget.removeWidgetByPrefix('shipping_');
 	j('#shipping_country_select').attr('id','country_select');
 });
-
-/// XXTODOXX: NEED TO TEST FIELD ORDER!
 
 /*
 test('Check user interaction -below-', function(){
@@ -328,21 +306,23 @@ test('Valid field_data should', function(){
 		fieldValuesForAForm,
 		fieldErrorsForAForm
 	);
-
+	equal( j('.data_address_widget').length, 1, 'create one data_address_widget');
 	equal( j('.data_address_widget input#data_address1').val(), '64 Baker Street', 'prepopulate the street input.');
 	equal( j('.data_address_widget input#data_city').val(), 'London', 'prepopulate the city input.');
 	equal( j('.data_address_widget input#data_zip').val(), 'ABC123', 'prepopulate the zip input.');
-	equal( j('.data_address_widget select#data_state').val(), 'Mie', 'prepopulate the state select.');
+	equal( j('.data_address_widget select#data_state option:selected').text(), 'Mie', 'prepopulate the state select.');
 
 	// tear down this test
 	SCEDEV.AddressWidget.removeWidgetByPrefix('data_');
 	j('#data_country_select').attr('id','country_select');
+	console.log('country_select:\n');
+	console.log(j('#country_select'));
 });
 
 test('Nonexistant field_errors should', function(){
 	j('#country_select').attr('id','noerrors_country_select');
 	var fieldOrder = 'default'
-	var fieldPrefix = 'noerrors';
+	var fieldPrefix = 'noerrors_';
 	var countryInfo = countryStateInfo;
 	SCEDEV.AddressWidget.generateFormElements(
 		fieldPrefix,
@@ -353,6 +333,7 @@ test('Nonexistant field_errors should', function(){
 		emptyObject
 	);
 
+	equal(j('.noerrors_address_widget').length, 1, 'create one address_widget');
 	equal(j('.noerrors_address_widget .form-warning').length, 0, 'have no elements with class .form-warning');
 
 	// tear down this test
@@ -363,7 +344,7 @@ test('Nonexistant field_errors should', function(){
 test('When given field_errors should', function(){
 	j('#country_select').attr('id','errors_country_select');
 	var fieldOrder = 'default'
-	var fieldPrefix = 'errors';
+	var fieldPrefix = 'errors_';
 	var countryInfo = countryStateInfo;
 	SCEDEV.AddressWidget.generateFormElements(
 		fieldPrefix,
@@ -374,29 +355,66 @@ test('When given field_errors should', function(){
 		fieldErrorsForAForm
 	);
 
-	equal(j('.errors_address_widget .form-warning').length, 4, 'have the right number of elements with class .form-warning');
+	equal(j('.errors_address_widget').length, 1, 'create one address_widget');
+	equal( j('.errors_address_widget .form-warning').length, 4, 'have the right number of elements with class .form-warning');
 
 	// tear down this test
-	// SCEDEV.AddressWidget.removeWidgetByPrefix('noerrors_');
-	// j('#noerrors_country_select').attr('id','country_select');
+	SCEDEV.AddressWidget.removeWidgetByPrefix('errors_');
+	j('#errors_country_select').attr('id','country_select');
 });
 
-// test('When given valid field data should', function(){
-// 	var selected_country_code = 'JZ';
-// 	var field_prefix = 'shipping_';
-// 	var validFieldData = fieldData;
-// 	var countryInfo = countryStateInfo;
-// 	SCEDEV.AddressWidget.generateFormElements(
-// 		selected_country_code,
-// 		field_prefix,
-// 		fieldData,
-// 		countryInfo
-// 		);
-// 	equal( j('.Jamesistan input#shipping_street').val(), '64 Baker Street', 'have the correct value for street.');
-// 	equal( j('.Jamesistan input#shipping_city').val(), 'Sagamihara', 'have the correct value for city.');
-// 	equal( j('.Jamesistan input#shipping_postal').val(), 'ABC123', 'have the correct value for postal code.');
-// 	equal( j('.Jamesistan select#shipping_state').val(), 'Mie', 'have the correct value for state.');
-// 	equal( j('.Jamesistan .chzn-single span').text(), 'Mie', 'have the correct text displayed in the chosen dropdown UI');
-// 	equal( j('.Jamesistan .error').length, 3, 'have the correct number of divs with class .error.');
-// 	equal( j('.Jamesistan .error').text(), 'some error message', 'have the correct error text for field.');
-// });
+/*
+ * Test field order
+ */
+
+test('Given a japanese field order should', function(){
+	j('#country_select').attr('id','japanese_country_select');
+	var fieldPrefixJapanese = 'japanese_';
+	var fieldOrder = 'japanese';
+	SCEDEV.AddressWidget.generateFormElements(
+		fieldPrefixJapanese,
+		fieldOrder,
+		labelsForJapan,
+		listOfStatesForACountry,
+		fieldValuesForAForm,
+		fieldErrorsForAForm
+	);
+
+	result = j('.japanese_address_widget input');
+
+	equal( j('.japanese_address_widget').length, 1, 'a japanese_address_widget');
+	equal( j(result[0]).attr('id'), 'japanese_zip', 'have the first input with id postal_code');
+	equal( j('.japanese_address_widget select').attr('id'), 'japanese_state', 'have the second item be a select with id japanese_state');
+	equal( j(result[1]).attr('id'), 'japanese_city', 'have the second input (third item) with id japanese_city');
+	equal( j(result[2]).attr('id'), 'japanese_address1', 'have the third input (4th item) with id japanese_address1');
+
+	// tear down this test
+	SCEDEV.AddressWidget.removeWidgetByPrefix('japanese_');
+	j('#japanese_country_select').attr('id','country_select');
+});
+
+test('Given a default field order and states should', function(){
+	j('#country_select').attr('id','us_country_select');
+	var fieldPrefix = 'us_';
+	var fieldOrder = 'default';
+	SCEDEV.AddressWidget.generateFormElements(
+		fieldPrefix,
+		fieldOrder,
+		labelsForADefaultCountry,
+		listOfStatesForACountry,
+		fieldValuesForAForm,
+		fieldErrorsForAForm
+	);
+
+	result = j('.us_address_widget input');
+
+	equal( j('.us_address_widget').length, 1, 'one address_widget');
+	equal( j(result[0]).attr('id'), 'us_address1', 'have the first input with correct id');
+	equal( j(result[1]).attr('id'), 'us_city', 'have the second input with correct id');
+	equal( j('.us_address_widget select').attr('id'), 'us_state', 'have select with correct id');
+	equal( j(result[2]).attr('id'), 'us_zip', 'have the third input (4th item) with correct id');
+
+	// tear down this test
+	SCEDEV.AddressWidget.removeWidgetByPrefix('us_');
+	j('#us_country_select').attr('id','country_select');
+});

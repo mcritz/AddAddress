@@ -11,6 +11,8 @@ SCEDEV.AddressWidget = {
         }
         if(!j.isEmptyObject(field_errors)) {
             this.displayErrors(field_errors, field_prefix);
+        } else {
+            console.log('no field_errors')
         }
         return field_prefix + ' address widget set.';
     }
@@ -28,7 +30,8 @@ SCEDEV.AddressWidget = {
             var labelForStates = '<div class="row ' + field_prefix + 'state"><label for="' + field_prefix + 'state">' + labels_for_this_country.state + '</label>';
             var selectWithStates = '<select id="' + field_prefix + 'state" class="chzn-select">';
             for (var i = 0; i < list_of_states.length; i++){
-                var stateOption = '<option val="' + list_of_states[i].oid + '">' + list_of_states[i].name + '</option>';
+                // XXTODOXX: populate options numerically by oid
+                var stateOption = '<option value="' + list_of_states[i].oid + '">' + list_of_states[i].name + '</option>';
                 selectWithStates += stateOption;
             }
             selectWithStates += '</select></div>';
@@ -78,11 +81,11 @@ SCEDEV.AddressWidget = {
     , displayErrors : function(field_errors, field_prefix) {
         j.each(field_errors, function(input,message){
             if (message != '') {
-                console.log(input + ' : ' + message + '\n   for ' + field_prefix + input);
+                // console.log(input + ' : ' + message + '\n   for ' + field_prefix + input);
                 var errorDiv = SCEDEV.AddressWidget.createErrorDiv(message);
                 // console.log('errorDiv: ' + errorDiv);
                 var targetInput = j('div.row.' + field_prefix + input);
-                console.log(targetInput);
+                // console.log(targetInput);
                 j(errorDiv).insertBefore(targetInput);
             }
         });

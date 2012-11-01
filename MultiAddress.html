@@ -183,6 +183,7 @@
             /*
              * Fixture data to demo.
              */
+
             var transitionDuration = 250;
 
             var fixtureLabels = {};
@@ -192,7 +193,33 @@
 
             var fixtureLabelsURL = 'js/fixtureLabels.json';
             var fixtureStatesURL = 'js/fixtureStates.json';
+            var fixtureLabels =
+            {
+                "city":"Metropolis",
+                "state":"Political District",
+                "address1":"Avenue",
+                "zip":"Post Office Number"
+            }
 
+            var fixtureStates =
+            [
+                {"name":"Hokkaido", "oid":1},{"name":"Aomori", "oid":2},{"name":"Iwate", "oid":3},{"name":"Miyagi", "oid":4},{"name":"Akita", "oid":5},{"name":"Yamagata", "oid":6},{"name":"Fukushima", "oid":7},{"name":"Ibaraki", "oid":8},{"name":"Tochigi", "oid":9},{"name":"Gunma", "oid":10},{"name":"Saitama", "oid":11},{"name":"Chiba", "oid":12},{"name":"Tokyo", "oid":13},{"name":"Kanagawa", "oid":14},{"name":"Niigata", "oid":15},{"name":"Toyama", "oid":16},{"name":"Ishikawa", "oid":17},{"name":"Fukui", "oid":18},{"name":"Yamanashi", "oid":19},{"name":"Nagano", "oid":20},{"name":"Gifu", "oid":21},{"name":"Shizuoka", "oid":22},{"name":"Aichi", "oid":23},{"name":"Mie", "oid":24},{"name":"Shiga", "oid":25},{"name":"Kyoto", "oid":26},{"name":"Osaka", "oid":27},{"name":"Hyogo", "oid":28},{"name":"Nara", "oid":29},{"name":"Wakayama", "oid":30},{"name":"Tottori", "oid":31},{"name":"Shimane", "oid":32},{"name":"Okayama", "oid":33},{"name":"Hiroshima", "oid":34},{"name":"Yamaguchi", "oid":35},{"name":"Tokushima", "oid":36},{"name":"Kagawa", "oid":37},{"name":"Ehime", "oid":38},{"name":"Kochi", "oid":39},{"name":"Fukuoka", "oid":40},{"name":"Saga", "oid":41},{"name":"Nagasaki", "oid":42},{"name":"Kumamoto", "oid":43},{"name":"Oita", "oid":44},{"name":"Miyazaki", "oid":45},{"name":"Kagoshima", "oid":46},{"name":"Okinawa", "oid":47}
+            ]
+            var fixtureValues =
+            {
+                "address1":"64 Baker Street",
+                "city":"London",
+                "state":"Mie",
+                "zip":"ABC123"
+            }
+
+            var fixtureErrors =
+            {
+                "address1":"Please enter a street address",
+                "city":"Please enter a city",
+                "state":"Please select a state",
+                "zip":"Please enter a postal code"
+            }
             // apply Chosen jQuery plugin to form elements
             var applyChosen = function(){
                 j('.chzn-select').chosen();
@@ -203,21 +230,22 @@
                 j.getJSON(fixtureLabelsURL,
                     function(labelData){
                         fixtureLabels = labelData;
-                        // console.log('fixtureLabels\n')
-                        // console.log(fixtureLabels);
+                        console.log('fixtureLabels\n')
+                        console.log(fixtureLabels);
                     }
                 );
-                j.getJSON(fixtureStatesURL,
-                    function(statesData){
-                        fixtureStates = statesData;
-                        // console.log('fixtureStates\n')
-                        // console.log(fixtureStates);
-                    }
-                );
+                // j.getJSON(fixtureStatesURL,
+                //     function(statesData){
+                //         fixtureStates = statesData;
+                //         // console.log('fixtureStates\n')
+                //         // console.log(fixtureStates);
+                //     }
+                // );
+                SCEDEV.AddressWidget.generateFormElements('', 'default', fixtureLabels, fixtureStates, fixtureValues, fixtureErrors);
             }
 
             j('#country_select').change(function(){
-                SCEDEV.AddressWidget.generateFormElements('shipping_', 'default', fixtureLabels, fixtureStates, fixtureValues, fixtureErrors);
+                initCountryStateInfo();
             });
 
 
