@@ -41,7 +41,7 @@ var fieldValuesForAForm =
 {
 	"address1":"64 Baker Street",
 	"city":"London",
-	"state":"Mie",
+	"state":"24",
 	"zip":"ABC123"
 }
 
